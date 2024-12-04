@@ -154,12 +154,9 @@ this.ScenarioInitialize(scenarioInfo);
   testRunner.When("I navigate to the Profile page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 23
-  testRunner.When(string.Format("I added a new language with \'{0}\',\'{1}\'", language, languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.When(string.Format("I updated language with \'{0}\' and \'{1}\' with \'{2}\',\'{3}\'", language, languageLevel, editedLanguage, editedLanguageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 24
-  testRunner.When(string.Format("I updated language with \'{0}\',\'{1}\'", editedLanguage, editedLanguageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 25
   testRunner.Then(string.Format("the Language should be updated successfully with new \'{0}\',\'{1}\'", editedLanguage, editedLanguageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
@@ -169,8 +166,8 @@ this.ScenarioInitialize(scenarioInfo);
         [NUnit.Framework.TestAttribute()]
         [NUnit.Framework.DescriptionAttribute("3.Delete the newly added language")]
         [NUnit.Framework.CategoryAttribute("deletelanguage")]
-        [NUnit.Framework.TestCaseAttribute("Urdu", "Fluent", "Urdu", null)]
-        public void _3_DeleteTheNewlyAddedLanguage(string language, string languageLevel, string languagetobedeleted, string[] exampleTags)
+        [NUnit.Framework.TestCaseAttribute("Urdu", "Fluent", "Urdu", "French", "Fluent", null)]
+        public void _3_DeleteTheNewlyAddedLanguage(string language, string languageLevel, string languageLevelToBeDeleted, string newLanguage, string newLanguageLevel, string[] exampleTags)
         {
             string[] @__tags = new string[] {
                     "deletelanguage"};
@@ -182,9 +179,11 @@ this.ScenarioInitialize(scenarioInfo);
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             argumentsOfScenario.Add("Language", language);
             argumentsOfScenario.Add("LanguageLevel", languageLevel);
-            argumentsOfScenario.Add("Languagetobedeleted", languagetobedeleted);
+            argumentsOfScenario.Add("LanguageLevelToBeDeleted", languageLevelToBeDeleted);
+            argumentsOfScenario.Add("NewLanguage", newLanguage);
+            argumentsOfScenario.Add("NewLanguageLevel", newLanguageLevel);
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("3.Delete the newly added language", null, tagsOfScenario, argumentsOfScenario, featureTags);
-#line 33
+#line 32
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
             if ((TagHelper.ContainsIgnoreTag(tagsOfScenario) || TagHelper.ContainsIgnoreTag(featureTags)))
@@ -194,20 +193,20 @@ this.ScenarioInitialize(scenarioInfo);
             else
             {
                 this.ScenarioStart();
-#line 34
+#line 33
   testRunner.Given("I logged into Mars portal successfully", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 35
+#line 34
   testRunner.When("I navigate to the Profile page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
+#line 35
+  testRunner.When(string.Format("I add new language with \'{0}\' and \'{1}\'", newLanguage, newLanguageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
 #line 36
-  testRunner.When(string.Format("I added a new language with \'{0}\',\'{1}\'", language, languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.When(string.Format("I deleted newly added language with \'{0}\' and \'{1}\'", language, languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 37
-  testRunner.When("I deleted newly added language", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 38
-  testRunner.Then(string.Format("language with name \'{0}\' should be deleted successfully", languagetobedeleted), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then("language with name \'<Languagetobedeleted>\' should be deleted successfully", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -247,7 +246,7 @@ this.ScenarioInitialize(scenarioInfo);
   testRunner.When("I navigate to the Profile page", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 49
-  testRunner.When(string.Format("I added new language with blank \'{0}\' and \'{1}\'", language, languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+  testRunner.When(string.Format("I added new language with blank \'{0}\' and blank \'{1}\'", language, languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 50
   testRunner.Then("language is not added to the profile", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -379,7 +378,7 @@ this.ScenarioInitialize(scenarioInfo);
   testRunner.When(string.Format("I add language with \'{0}\' and blank \'{1}\'", language, languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 86
-  testRunner.Then(string.Format("Language with blank \'{0}\' is not added to profile", languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+  testRunner.Then(string.Format("Language with blank \'{0}\' is not added to language profile", languageLevel), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

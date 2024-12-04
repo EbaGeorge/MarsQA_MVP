@@ -3,7 +3,10 @@ using Mars_QASpecFlow.Utilities;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.DevTools.V127.Profiler;
+using OpenQA.Selenium.Support.UI;
 using System;
+using System.Security.Cryptography.X509Certificates;
 using TechTalk.SpecFlow;
 
 namespace Mars_QASpecFlow.StepDefinitions
@@ -11,133 +14,158 @@ namespace Mars_QASpecFlow.StepDefinitions
     [Binding]
     public class LanguageStepDefinitions : CommonDriver
     {
-        LoginPage login = new LoginPage();
-        ProfilePage profile = new ProfilePage();
 
-        [BeforeScenario]
-        public void Setup()
+        LoginPage login;
+        LanguagePage profile;
+        public LanguageStepDefinitions()
         {
-            driver=new  ChromeDriver();
+            login = new LoginPage();
+            profile=new LanguagePage();
         }
-        //Method to call Login fucntionality
+        [BeforeScenario]
+        public void BeforeScenario()
+        {
+            Initialise();
+            LoginAndDeleteLanguages();
+            DeleteSkill();
+        }
+        public void LoginAndDeleteLanguages()
+        {
+            login.LoginActions(driver);
+            DeleteAllRecords();
+        }
+        public void DeleteSkill()
+        {
+
+            IWebElement skillButton = driver.FindElement(By.XPath("//*[@id='account-profile-section']/div/section[2]/div/div/div/div[3]/form/div[1]/a[2]"));
+            skillButton.Click();
+            DeleteAllRecords();
+        }
         [Given(@"I logged into Mars portal successfully")]
         public void GivenILoggedIntoMarsPortalSuccessfully()
         {
-            login.LoginActions(driver);
+           //login.LoginActions(driver);
         }
 
-        //Navigation to profile page
         [When(@"I navigate to the Profile page")]
         public void WhenINavigateToTheProfilePage()
         {
-         Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]/div/div[1]/div[2]/div/span", 6);
-         IWebElement profileName = driver.FindElement(By.XPath("/html/body/div[1]/div/div[1]/div[2]/div/span"));
-         Assert.That(profileName.Text == "Hi Eba", "Unsuccessful login");
+            Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]/div/div[1]/div[2]/div/span", 15);
+            IWebElement profileName = driver.FindElement(By.XPath("/html/body/div[1]/div/div[1]/div[2]/div/span"));
+            Assert.That(profileName.Text == "Hi Eba", "Unsuccessful login");
         }
 
-        //Method call to add new languages
         [When(@"I added a new language with '([^']*)','([^']*)'")]
-        public void WhenIAddedANewLanguageWith(string language, string level)
+        public void WhenIAddedANewLanguageWith(string language, string languageLevel)
         {
-            profile.AddNewLanguage(driver,language,level);
+            profile.AddNewLanguage(language, languageLevel);
         }
 
-        //Method call to verify addition of language
         [Then(@"the Language should be added successfully with new '([^']*)','([^']*)'")]
-        public void ThenTheLanguageShouldBeAddedSuccessfullyWithNew(string language, string level)
+        public void ThenTheLanguageShouldBeAddedSuccessfullyWithNew(string language, string languageLevel)
         {
-            string languageName=profile.VerifyAddLanguage(driver,language,level);
-            Assert.That(languageName == language, "Language is not added");
+           string addedLanguage=profile.VerifyAddLanguage(language, languageLevel);
+           Assert.That(addedLanguage == language, "Language is not added");
+
         }
 
-        //Method call to edit language
-        [When(@"I updated language with '([^']*)','([^']*)'")]
-        public void WhenIUpdatedLanguageWith(string editedLanguage, string editedLanguageLevel)
+        [When(@"I updated language with '([^']*)' and '([^']*)' with '([^']*)','([^']*)'")]
+        public void WhenIUpdatedLanguageWithAndWith(string language, string languageLevel, string editedLanguage, string editedLanguageLevel)
         {
-            profile.EditLanguages(driver, editedLanguage, editedLanguageLevel);
+            profile.EditLanguages(language,languageLevel,editedLanguage, editedLanguageLevel);
         }
 
-
-        //Method call to verify updation of languages
         [Then(@"the Language should be updated successfully with new '([^']*)','([^']*)'")]
         public void ThenTheLanguageShouldBeUpdatedSuccessfullyWithNew(string editedLanguage, string editedLanguageLevel)
         {
-            string updatedLanguage = profile.VerifyUpdatedLanguage(driver, editedLanguage);
+            string updatedLanguage=profile.VerifyUpdatedLanguage(editedLanguage);
             Assert.That(updatedLanguage == editedLanguage, "Language is not updated");
         }
 
-        //Method call to delete language
-        [When(@"I deleted newly added language")]
-        public void WhenIDeletedNewlyAddedLanguage()
+        [When(@"I add new language with '([^']*)' and '([^']*)'")]
+        public void WhenIAddNewLanguageWithAnd(string newLanguage, string newLanguageLevel)
         {
-            profile.DeleteLanguage(driver);
+            profile.AddNewLanguage(newLanguage, newLanguageLevel);
         }
 
-        //Method call to verify deletion of languages
+
+        [When(@"I deleted newly added language with '([^']*)' and '([^']*)'")]
+        public void WhenIDeletedNewlyAddedLanguageWithAnd(string language, string languageLevel)
+        {
+            profile.DeleteLanguage(language, languageLevel);
+        }
+
         [Then(@"language with name '([^']*)' should be deleted successfully")]
         public void ThenLanguageWithNameShouldBeDeletedSuccessfully(string languageToBeDeleted)
         {
-            string deletedLanguage = profile.VerifyDeletedLanguage(driver, languageToBeDeleted);
-            Assert.That(deletedLanguage != languageToBeDeleted, "Language is not deleted");
+            string lastLanguage=profile.VerifyDeletedLanguage(languageToBeDeleted);
+            Assert.That(lastLanguage != languageToBeDeleted, "Language is not deleted");
         }
 
-        //Method call to add language with blank language and blank language level
-        [When(@"I added new language with blank '([^']*)' and '([^']*)'")]
-        public void WhenIAddedNewLanguageWithBlankAnd(string language, string languageLevel)
+        [When(@"I added new language with blank '([^']*)' and blank '([^']*)'")]
+        public void WhenIAddedNewLanguageWithBlankAndBlank(string language, string languageLevel)
         {
-            profile.AddNewLanguage(driver, language, languageLevel); 
+            profile.AddNewLanguage(language, languageLevel);
         }
-        //Method to verify the pop up
+
         [Then(@"language is not added to the profile")]
         public void ThenLanguageIsNotAddedToTheProfile()
         {
+            Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]", 15);
             IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
             Assert.That(msg.Text == "Please enter language and level", "Failure");
         }
 
-        //Method call to add language that is already existing
         [When(@"I added language with already existing '([^']*)' and '([^']*)'")]
         public void WhenIAddedLanguageWithAlreadyExistingAnd(string language, string languageLevel)
         {
-            profile.AddNewLanguage(driver, language, languageLevel);
+            profile.AddNewLanguage(language, languageLevel);
+            profile.AddNewLanguage(language, languageLevel);
         }
 
-        //Method to verify pop up 
         [Then(@"Language should not be added to the profile")]
         public void ThenLanguageShouldNotBeAddedToTheProfile()
         {
-            Thread.Sleep(1000);
+            Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]", 15);
             IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
             Assert.That(msg.Text == "This language is already exist in your language list.", "Failure");
         }
 
-        //Method call to add language with blank language 
         [When(@"I add language with blank '([^']*)' and '([^']*)'")]
         public void WhenIAddLanguageWithBlankAnd(string language, string languageLevel)
         {
-            profile.AddNewLanguage(driver, language, languageLevel);
+            profile.AddNewLanguage(language, languageLevel);
         }
 
-        //Method to verify pop up
         [Then(@"Language with blank '([^']*)' is not added to profile")]
         public void ThenLanguageWithBlankIsNotAddedToProfile(string language)
         {
+            Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]/div",15);
             IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]/div"));
             Assert.That(msg.Text == "Please enter language and level", "Failure");
         }
 
-        //Method to add language with blank languageLevel
         [When(@"I add language with '([^']*)' and blank '([^']*)'")]
         public void WhenIAddLanguageWithAndBlank(string language, string languageLevel)
         {
-            profile.AddNewLanguage(driver, language, languageLevel);
+            profile.AddNewLanguage(language, languageLevel);
         }
 
+        [Then(@"Language with blank '([^']*)' is not added to language profile")]
+        public void ThenLanguageWithBlankIsNotAddedToLanguageProfile(string language)
+        {
+            Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]/div", 15);
+            IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]/div"));
+            Assert.That(msg.Text =="Please enter language and level", "Failure");
+        }
         [AfterScenario]
         public void CloseDriver()
         {
+            DeleteAllRecords();
             driver.Quit();
         }
 
+
     }
+
 }

@@ -20,8 +20,7 @@ Scenario Outline: 1.Add valid language to user profile
 Scenario Outline:2.Edit the newly added languages
 		Given I logged into Mars portal successfully
 		When  I navigate to the Profile page
-		When  I added a new language with '<Language>','<LanguageLevel>'
-		When  I updated language with '<EditedLanguage>','<EditedLanguageLevel>'
+		When  I updated language with '<Language>' and '<LanguageLevel>' with '<EditedLanguage>','<EditedLanguageLevel>'
 		Then the Language should be updated successfully with new '<EditedLanguage>','<EditedLanguageLevel>'
 
 		Examples: 
@@ -33,20 +32,21 @@ Scenario Outline:2.Edit the newly added languages
 Scenario Outline: 3.Delete the newly added language
 		Given I logged into Mars portal successfully
 		When I navigate to the Profile page
-		When  I added a new language with '<Language>','<LanguageLevel>'
-		When I deleted newly added language
+		When I add new language with '<NewLanguage>' and '<NewLanguageLevel>'
+		When I deleted newly added language with '<Language>' and '<LanguageLevel>'
 		Then language with name '<Languagetobedeleted>' should be deleted successfully 
 
 		Examples: 
-		| Language | LanguageLevel | Languagetobedeleted |
-		|   Urdu   |   Fluent      |    Urdu             |
+		| Language | LanguageLevel | LanguageLevelToBeDeleted | NewLanguage | NewLanguageLevel |
+		| Urdu     | Fluent        | Urdu                     | French      | Fluent           |
+		
 
 
 @addlanguagewithoutlanguageandlevel
 Scenario Outline:4. Add languages without language and level
 		Given I logged into Mars portal successfully
 		When I navigate to the Profile page
-		When I added new language with blank '<Language>' and '<LanguageLevel>'
+		When I added new language with blank '<Language>' and blank '<LanguageLevel>'
 		Then language is not added to the profile
 
 		Examples: 
@@ -64,7 +64,7 @@ Scenario Outline: 5.Add language with same language and language level
 		Examples: 
 		| Language | LanguageLevel |
 		| English  | Basic         |
-
+		
 
 @addlanguagewithoutlanguage
 Scenario Outline:6.Add languages without language
@@ -83,7 +83,7 @@ Scenario Outline:7.Add languages without language level
 		Given I logged into Mars portal successfully
 		When I navigate to the Profile page
 		When I add language with '<Language>' and blank '<LanguageLevel>'
-		Then Language with blank '<LanguageLevel>' is not added to profile
+		Then Language with blank '<LanguageLevel>' is not added to language profile
 
 		Examples: 
 		| Language | LanguageLevel |

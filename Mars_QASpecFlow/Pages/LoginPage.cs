@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Mars_QASpecFlow.Pages
 {
-    public class LoginPage
+    public class LoginPage:CommonDriver
     {
         public void LoginActions(IWebDriver driver)
         {

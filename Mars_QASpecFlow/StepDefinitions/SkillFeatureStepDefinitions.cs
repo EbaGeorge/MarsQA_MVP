@@ -12,119 +12,121 @@ namespace Mars_QASpecFlow.StepDefinitions
   
     public class SkillFeatureStepDefinitions:CommonDriver
     {
-        ProfilePage profilePage=new ProfilePage();
-        public void Setup()
-        {
-            driver = new ChromeDriver();
+        SkillPage skillPage;
+        //SkillPage skillPage =new SkillPage();
+        public SkillFeatureStepDefinitions()
+        { 
+            skillPage = new SkillPage();
         }
-        //Method to navigate to skills page
-        [When(@"I navigate to the Skills page")]
-        public void WhenINavigateToTheSkillsPage()
-        {
+            [When(@"I navigate to the Skills page")]
+            public void WhenINavigateToTheSkillsPage()
+            {
+
+            }
+
+            [When(@"I added a new skill with '([^']*)','([^']*)'")]
+            public void WhenIAddedANewSkillWith(string skill, string skillLevel)
+            {
+
+                skillPage.AddNewSkill(skill, skillLevel);
+            }
+
+            [Then(@"the skill should be added successfully with new '([^']*)'")]
+            public void ThenTheSkillShouldBeAddedSuccessfullyWithNew(string skill)
+            {
+                string newSkill = skillPage.VerifyAddedSkill(skill);
+                Assert.That(newSkill == skill, "Skill is not added");
+            }
+
+            [When(@"I updated skill with '([^']*)' and '([^']*)' as '([^']*)','([^']*)'")]
+            public void WhenIUpdatedSkillWithAndAs(string skill, string skillLevel, string editedSkill, string editedSkillLevel)
+            {
+                skillPage.EditSkill(skill, skillLevel, editedSkill, editedSkillLevel);
+            }
+
+            [Then(@"the skill should be updated successfully with new '([^']*)','([^']*)'")]
+            public void ThenTheSkillShouldBeUpdatedSuccessfullyWithNew(string skill, string skillLevel)
+            {
+                string editSkill = skillPage.VerifyEditedSkill(skill);
+                Assert.That(editSkill == skill, "Skill is not updated");
+            }
+
+            [When(@"I added new skill with '([^']*)','([^']*)'")]
+            public void WhenIAddedNewSkillWith(string skill, string skillLevel)
+            {
+                skillPage.AddNewSkill(skill, skillLevel);
+            }
+
+            [When(@"I deleted newly added skill with '([^']*)' and '([^']*)'")]
+            public void WhenIDeletedNewlyAddedSkillWithAnd(string skill, string skillLevel)
+            {
+                skillPage.DeleteSkill(skill, skillLevel);
+
+            }
+            [Then(@"skill with name '([^']*)' should be deleted successfully")]
+            public void ThenSkillWithNameShouldBeDeletedSuccessfully(string skill)
+            {
+                string lastSkill = skillPage.VerifyDeletedSkill(skill);
+                Assert.That(lastSkill != skill, "Skill is not deleted");
+            }
+
+            [When(@"I added new skill with blank '([^']*)' and blank '([^']*)'")]
+            public void WhenIAddedNewSkillWithBlankAndBlank(string skill, string skillLevel)
+            {
+                skillPage.AddSkillWithBlankSkillAndLevel(skill, skillLevel);
+            }
+
+            [Then(@"skill with blank '([^']*)' and blank '([^']*)' is not added to the profile")]
+            public void ThenSkillWithBlankAndBlankIsNotAddedToTheProfile(string p0, string p1)
+            {
+
+                IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
+                Assert.That(msg.Text == "Please enter skill and experience level", "Failure");
+            }
+
+            [When(@"I added an already existing skill with '([^']*)' and '([^']*)'")]
+            public void WhenIAddedAnAlreadyExistingSkillWithAnd(string skill, string skillLevel)
+            {
+
+                skillPage.AddAlreadyExistingSkill(skill, skillLevel);
+            }
+
+            [Then(@"already existing skill is not added to the profile")]
+            public void ThenAlreadyExistingSkillIsNotAddedToTheProfile()
+            {
+                Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]", 15);
+                IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
+                Assert.That(msg.Text == "This skill is already exist in your skill list.", "Failure");
+            }
+
+            [When(@"I add skill with blank '([^']*)' and '([^']*)'")]
+            public void WhenIAddSkillWithBlankAnd(string skill, string skillLevel)
+            {
+                skillPage.AddSkillWithBlankSkill(skill, skillLevel);
+
+            }
+
+            [Then(@"skill with blank '([^']*)' is not added to profile")]
+            public void ThenSkillWithBlankIsNotAddedToProfile(string skill)
+            {
+                Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]", 15);
+                IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
+                Assert.That(msg.Text == "Please enter skill and experience level", "Failure");
+            }
+
+            [When(@"I add skill with '([^']*)' and blank '([^']*)'")]
+            public void WhenIAddSkillWithAndBlank(string skill, string skillLevel)
+            {
+                skillPage.AddSkillWithBlankLevel(skill, skillLevel);
+            }
+
+            [Then(@"skill with blank '([^']*)' is not added to the profile")]
+            public void ThenSkillWithBlankIsNotAddedToTheProfile(string p0)
+            {
+                Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]", 15);
+                IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
+                Assert.That(msg.Text == "Please enter skill and experience level", "Failure");
+            }
         
-        }
-        //Method call to add new skill to the profile
-        [When(@"I added a new skill with '([^']*)','([^']*)'")]
-        public void WhenIAddedANewSkillWith(string skill, string skillLevel)
-        {
-            
-            profilePage.AddNewSkill(driver,skill, skillLevel);
-        }
-
-        //Method call to verify whether skill is added to profile
-        [Then(@"the skill should be added successfully with new '([^']*)'")]
-        public void ThenTheSkillShouldBeAddedSuccessfullyWithNew(string skill)
-        {
-            string skills = profilePage.VerifyAddedSkill(driver, skill);
-            Assert.That(skills == skill, "Skill is not added");
-        }
-
-        //Method call to edit skill
-        [When(@"I updated skill with '([^']*)','([^']*)'")]
-        public void WhenIUpdatedSkillWith(string skill, string skillLevel)
-        {
-            profilePage.EditSkill(driver, skill, skillLevel);
-        }
-
-        //Method call to verify whether skill is updated
-        [Then(@"the skill should be updated successfully with new '([^']*)','([^']*)'")]
-        public void ThenTheSkillShouldBeUpdatedSuccessfullyWithNew(string skill, string skillLevel)
-        {
-            string updatedSkill=profilePage.VerifyEditedSkill(driver, skill);
-            Assert.That(updatedSkill == skill, "Skill is not updated");
-        }
-
-        //Method call to delete skill
-        [When(@"I deleted newly added skill")]
-        public void WhenIDeletedNewlyAddedSkill()
-        {
-            profilePage.DeleteSkill(driver);
-        }
-
-        //Method call verify whether skill is deleted
-        [Then(@"skill with name '([^']*)' should be deleted successfully")]
-        public void ThenSkillWithNameShouldBeDeletedSuccessfully(string skill)
-        {
-            string deleteSkill=profilePage.VerifyDeletedSkill(driver, skill);
-            Assert.That(skill != deleteSkill, "Skill is deleted");
-        }
-
-        //Method call to add skill without skill and skill level
-        [When(@"I added new skill without '([^']*)' and '([^']*)'")]
-        public void WhenIAddedNewSkillWithoutAnd(string skill, string skillLevel)
-        {
-            profilePage.AddNewSkill(driver, skill, skillLevel);
-        }
-
-        //Method call to verify pop up
-        [Then(@"skill is not added to the profile")]
-        public void ThenSkillIsNotAddedToTheProfile()
-        {
-           
-            IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
-            Assert.That(msg.Text == "Please enter skill and experience level", "Failure");
-        }
-
-        //Method call to add already existing skill
-        [When(@"I added an already existing skill with '([^']*)' and '([^']*)'")]
-        public void WhenIAddedAnAlreadyExistingSkillWithAnd(string skill, string skillLevel)
-        {
-            profilePage.AddNewSkill(driver, skill, skillLevel);
-        }
-
-        //Method call to verify pop up
-        [Then(@"already existing skill is not added to the profile")]
-        public void ThenAlreadyExistingSkillIsNotAddedToTheProfile()
-        {
-            Thread.Sleep(1000);
-            IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
-            Assert.That(msg.Text == "This skill is already exist in your skill list.", "Failure");
-        }
-
-        //Method call to add skill with blank skill 
-        [When(@"I add skill with blank '([^']*)' and '([^']*)'")]
-        public void WhenIAddSkillWithBlankAnd(string skill, string skillLevel)
-        {
-            profilePage.AddNewSkill(driver, skill, skillLevel);
-        }
-
-        //Method call to verify pop up
-        [Then(@"skill with blank '([^']*)' is not added to profile")]
-        public void ThenSkillWithBlankIsNotAddedToProfile(string skill)
-        {
-            
-            Wait.WaitToBeVisible(driver, "XPath", "/html/body/div[1]", 7);
-            IWebElement msg = driver.FindElement(By.XPath("/html/body/div[1]"));
-            Assert.That(msg.Text == "Please enter skill and experience level", "Failure");
-        }
-
-        //Method call to add skill with blank skillLevel
-        [When(@"I add skill with '([^']*)' and blank '([^']*)'")]
-        public void WhenIAddSkillWithAndBlank(string skill, string skillLevel)
-        {
-            profilePage.AddNewSkill(driver, skill, skillLevel);
-        }
-
-
     }
 }
